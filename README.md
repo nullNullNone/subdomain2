@@ -24,3 +24,7 @@
 ```
 rd "位数":"次数"
 rc "次数":[位数,位数......]
+
+```bash
+pip install dnspython
+```
