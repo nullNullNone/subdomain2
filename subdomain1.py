@@ -4,8 +4,17 @@ import dns
 import dns.resolver
 import json
 
-servlist = ["114.114.114.114"]
+################################################################
+def loadjson(file):
+    with open(file,"r") as f:
+        jsonld = json.loads(f.read())
+        f.close()
+        return jsonld
 
+jls = loadjson("perfom.json")
+servlist = jls["servlist"]
+burpmode = jls["mode"]
+################################################################
 class ramdd:
 
     All = []
@@ -73,6 +82,8 @@ def burp_rc(ine,bit):
         s.add(ramdd().ramdschar(bit))
     return s
 
+################################################################
+## Clock list work like a clock
 class defclock():
     le = 0
     bit = 0
@@ -101,11 +112,12 @@ class defclock():
                     self.stop = True
         return self.li
 
+################################################################
+## Rand
 class dictionary:
-
     dist = ["lele", "www", "mail", "ftp", "smtp", "pop", "m", "webmail", "pop3", "imap", "localhost", "autodiscover",
             "admin"
-        , "bbs", "test", "mx", "en", "email", "wap", "blog", "oa", "ns1", "vpn", "ns2", "www2", "mysql", "webdisk",
+        , "bbs", "test.txt", "mx", "en", "email", "wap", "blog", "oa", "ns1", "vpn", "ns2", "www2", "mysql", "webdisk",
             "dev", "old", "news",
             "calendar", "shop", "potala", "mobile", "web", "sip", "mobilemail", "ns", "cpanel", "www1", "whm", "new",
             "img", "search", "support"
@@ -361,125 +373,19 @@ class dictionary:
             "b5", "ut", "joke", "vnet", "broadband", "dam", "117", "guanli", "fanyi", "flower", "g1i8", "hg3", "wxtest",
             "john", "ku", "italian",
             "tmail", "biomed", "gem", "his", "alcor", "bd123002", "kaoshi"]
-
+    #
     def mk(self,*k):
-        res = [] +  self.dist
+        res = set().union(set(self.dist))
         for x in k:
-            if type(x) != type([]) or type(x) != set():
-                continue
-            else:
-                res += x
+            if type(x) == type(set()):
+                res = res.union(x)
+            if type(x) == type(list()):
+                res = res.union(set(x))
 
         return set(res)
 
-def file2li(f,en = "utf8"):
-    sett = set()
-    ff = open(f,"r",encoding=en)
-    for x in ff.readlines():
-        if x.strip() == "":
-            continue
-        sett.add(x)
-    ff.close()
-    return sett
-
-def loaddic(dir = "./dict/"):
-    import os
-    fi = os.scandir(dir)
-    dic = dictionary()
-    res = []
-    for x in fi:
-        # print(x.name)
-        res += dic.mk(file2li("./dict/" + x.name), res)
-    return res
-
-def Dns_Query_addr(domain,serverlist = ["114.114.114.114"]):
-    A = dns.resolver.resolve(domain)
-    A.nameservers = serverlist
-    A.timeout = 15
-    A.lifetime = 15
-    res = set()
-    for i in A.response.answer:
-        for j in i.items:
-            if j.rdtype == 1:
-                res.add(j.address)
-    return res
-
-def limit(obj,inp):
-    return inp%len(obj)
-
-def readfile(file):
-    with open(file,"r") as f:
-        return f.read()
-
-class scanDomain:
-    tmpset = set()
-    allurls = []
-    rd = ramdd()
-    def __init__(self):
-        dic = dictionary()
-        self.scanli = dic.mk(dic.dist, loaddic())
-
-    def lifile(self):
-        self.tmpset.update(loaddic())
-
-    def cfgli(self,jsons):
-        tempset = set()
-        jsono = json.loads(jsons)
-        rd = jsono["rd"]
-        for x in rd.keys():
-            k = int(x)
-            v = rd.get(x)
-            tempset.update(self.rd.randnumlist(k,v))
-        self.tmpset.update(tempset)
-        tempset.clear()
-        rc = jsono["rc"]
-        rck = list(rc.keys())[0]
-        print(rck)
-        rcv = rc.get(rck)
-        for x in rcv:
-            for xx in range(int(rck)):
-                tempset.add(self.rd.ramdschar(x))
-
-    def sclit(self,url = ""):
-        res = set()
-        self.cfgli(readfile("./gen.json"))
-        self.lifile()
-        self.allurls = list(self.tmpset)
-        bit = url.count("{")
-        let = len(self.allurls)
-        clc = defclock(bit, let)
-        for x in range(clc.forl):
-            clc.tick()
-            bil = url
-            for xx in range(bit):
-                bil = bil.replace("{"+str(xx)+"}",str(self.allurls[limit(self.allurls,clc.li[xx])]))
-            print("\r{}/{}".format(str(clc.li[0]),str(clc.li[-1])),end="")
-            res.add(bil)
-        print("========ok========")
-        return res
-
-def logdomain(dic,domain):
-    try:
-        res = Dns_Query_addr(domain)
-        if dic.get(domain) == None:
-            dic[domain] = set()
-        dic[domain].update(res)
-        time.sleep(0.4)
-    except Exception as e:
-        print("[E][{}]".format(e))
-
-def wfile(path,st):
-    with open(path,"a") as f:
-        f.write(st)
-        f.close()
-
-def li2str(s = []):
-    res = ""
-    for x in s:
-        res+=x+","
-    res+="\n"
-    return res
-
+################################################################
+## TH
 import threading
 class rt:
     threads = []
@@ -547,29 +453,210 @@ class rt:
         arg.update(k)
         self.thappendm(self.cop,arg)
 
+def execm(ec, dict):
+    tpw = rt()
+    tpw.thappcop(ec, dict)
+    tpw.thstart(wait=1)
+
+################################################################
+##Str porc
+def file2li(f,en = "utf8"):
+    sett = set()
+    ff = open(f,"r",encoding=en)
+    for x in ff.readlines():
+        sett.add(x.strip())
+    ff.close()
+    return sett
+
+def loaddic(dir = "./dict/"):
+    import os
+    fi = os.scandir(dir)
+    dic = dictionary()
+    res = []
+    for x in fi:
+        res += dic.mk(file2li("./dict/" + x.name), res)
+    return set(res)
+
+def limit(obj,inp):
+    return inp%len(obj)
+
+def readfile(file):
+    with open(file,"r") as f:
+        return f.read()
+
+def wfile(path,st):
+    with open(path,"a") as f:
+        f.write(st)
+        f.close()
+
+def li2str(s = [],sep = ",",pos = True):
+    res = ""
+    for x in s:
+        if not pos:
+            res += x + sep
+        if pos:
+            res += sep + x
+    res+="\n"
+    return res
+
+def tu2set(s,sets):
+    for x in s:
+        sets.add(x)
+    return sets
+
+def Md5(Str = ""):
+    import hashlib
+    return hashlib.md5(Str.encode('utf8')).hexdigest()
+
+def base64en(Str):
+    import base64
+    return base64.b64encode(Str.encode())
+################################################################
+##DNS
+import sys,socket
+def Dns_plain(domain):
+
+    try:
+        res = socket.gethostbyname(domain)
+        raw = res
+        return tuple(res), raw
+    except Exception as e:
+        raise Exception(str(e)+":"+domain)
+
+def Dns_Query_addr(domain,serverlist = ["114.114.114.114"]):
+    A = dns.resolver.resolve(domain)
+    A.nameservers = serverlist
+    A.timeout = 15
+    A.lifetime = 15
+    res = set()
+    for i in A.response.answer:
+        for j in i.items:
+            if j.rdtype == 1:
+                res.add(j.address)
+    raw = res
+    return tuple(list(res)),raw
+
+################################################################
+##DOmain
+class scanDomain:
+    tmpset = set()
+    allurls = []
+    rd = ramdd()
+    def __init__(self):
+        dic = dictionary()
+        self.scanli = dic.mk(dic.dist, loaddic())
+
+    def lifile(self):
+        self.tmpset.update(loaddic())
+
+    def cfgli(self,jsons):
+        tempset = set()
+        jsono = json.loads(jsons)
+        rd = jsono["rd"]
+        for x in rd.keys():
+            k = int(x)
+            v = rd.get(x)
+            tempset.union(self.rd.randnumlist(k,v))
+        self.tmpset.union(tempset)
+        tempset.clear()
+        rc = jsono["rc"]
+        rck = list(rc.keys())[0]
+        print(rck)
+        rcv = rc.get(rck)
+        for x in rcv:
+            for xx in range(int(rck)):
+                tempset.add(self.rd.ramdschar(x))
+
+    def sclit(self,url = ""):
+        res = set()
+        self.cfgli(readfile("./gen.json"))
+        self.lifile()
+        self.allurls = list(self.tmpset)
+        bit = url.count("{")
+        let = len(self.allurls)
+        clc = defclock(bit, let)
+        for x in range(clc.forl):
+            clc.tick()
+            bil = url
+            for xx in range(bit):
+                bil = bil.replace("{"+str(xx)+"}",str(self.allurls[limit(self.allurls,clc.li[xx])]))
+            print("\r{}/{}".format(str(clc.li[0]),str(clc.li[-1])),end="")
+            res.add(bil)
+        print("========ok========")
+        return res
+
+def logdomain(dic,domain,cmpset = {},rdomain = {}):
+    try:
+        tmp = domain.split(".")
+        ep = tmp = tmp[limit(tmp, 1):]
+        tmp = li2str(tmp, ".")
+        if  rdomain.get(tmp) != None:
+            print("[exit:domain]")
+            return
+        if burpmode == 1:
+            res, raw = Dns_Query_addr(domain, serverlist=servlist)
+        elif burpmode == 2:
+            res, raw = Dns_plain(domain)
+        if len(ep) >= 3:
+            if cmpset.get(tuple(res)) != None:
+                rdomain[ep] = ""
+                return
+        if cmpset.get(tuple(res)) != None:
+            return
+        if dic.get(domain) == None:
+            cmpset[tuple(res)] = ""
+            dic[domain] = set()
+        try:
+            dic[domain].update(raw)
+        except Exception as e:
+            raise Exception(e)
+    except Exception as e:
+        print("[E][{}]".format(e))
+
 def burp(domain):
     domains = dict()
     doms = scanDomain().sclit(domain)
     domlen = len(doms)
     Rt = rt()
-    Rt.silent = True
+    Rt.silent = False
+    cmpset = dict()
+    rdset = dict()
+    j = json.loads(open("perfom.json").read())
     i = 0
+    sta = False
     for x in range(domlen):
-        Rt.thappcop(Dns_Query_addr,{"domain":doms.pop(),"serverlist":servlist})
-        if i == 100:
+        don = doms.pop()
+        Rt.thappcop(logdomain,{"domain":don,"dic":domains,"cmpset":cmpset,"rdomain":rdset})
+
+        if i == j["th"]:
+            Rt.thstart()
+            i = 0
+        if len(doms)<1:
             Rt.thstart()
             i = 0
         i += 1
-        print("[\rfinish{}/{}:{}]".format(x, domlen, str(x / domlen)), end="")
+        proc_monitor(x,domlen)
     doms.clear()
 
     return domains
 
+def proc_monitor(a,b):
+    percent = str(int((a / b) * 100))
+    print("[{}/{}:{}%]".format(a, b,percent))
+
+################################################################
+
 i = 0
 with open("./targs.txt","r") as f:
     for x in f.readlines():
-        res = burp(x)
-        with open("./res/{}.txt".format(str(i)), "a") as sf:
+        res = burp(x.strip())
+        with open("./res/{}.txt".format(
+                x.replace("{","").
+                        replace("}","").
+                        replace(":","").
+                        replace(".","_").
+                        strip()
+                ), "a") as sf:
             for x in res:
                 tres = li2str([x]+list(res.get(x)))
                 print(tres)
