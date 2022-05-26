@@ -28,3 +28,4 @@ rc "次数":[位数,位数......]
 ```bash
 pip install dnspython
 ```
+更新修复大量bug
