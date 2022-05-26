@@ -38,3 +38,6 @@ pip install dnspython
 }
 ```
 ps 建议使用自己的字典以提高效率 虽然字典会自动生成
+ps mode 爆破模式 1.dnspuython 2.socket 没有3
+th 线程数 默认500
+
