@@ -19,9 +19,6 @@ output result
 
 dictionaries for scan subdomain
 
-```bash
-pip install dnspython
-```
 ### perfom.json
 
 settings for scanner
@@ -43,12 +40,17 @@ threadNum number of threads 500 default
 dict dir for dics
 
 # UPDATE
-
 21.5.26
 bug fix
-
 23.1.5
-
 use threadpool to reduce menmory cost
-
 delete function genaration dics 
+
+# install
+
+```bash
+pip install dnspython
+```
+
+# PICS
+![image](https://user-images.githubusercontent.com/97675486/211027317-3e2d7179-6983-4bd8-bcf2-ab7254778016.png)
