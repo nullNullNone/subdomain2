@@ -54,3 +54,12 @@ pip install dnspython
 
 # PICS
 ![image](https://user-images.githubusercontent.com/97675486/211027317-3e2d7179-6983-4bd8-bcf2-ab7254778016.png)
+
+# plan
+addin 
+ip138 
+ping
+ping in multi-place
+whois
+collection site of the user 
+
